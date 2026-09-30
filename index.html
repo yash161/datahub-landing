@@ -379,20 +379,26 @@
       <h2 class="contact-title">Ready to bring financial control to AI&nbsp;spending?</h2>
       <p class="contact-desc">Connect AI consumption with business ownership, unit economics, and continuous optimization. Let's explore how IBM Cloudability and Kubecost can work for your&nbsp;organization.</p>
     </div>
-    <form class="contact-form" id="contact-form" onsubmit="handleSubmit(event)">
+    <form action="https://formsubmit.co/jmcdonough@datahubusa.com" method="POST" class="contact-form" id="contact-form">
+      <!-- FormSubmit config -->
+      <input type="hidden" name="_subject" value="New FinOps + AI Consultation Request" />
+      <input type="hidden" name="_next" value="https://datahub-landing.vercel.app/?submitted=true#contact" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="text" name="_honey" style="display:none" />
+
       <div class="form-fields">
-        <input type="text" name="name" autocomplete="name" class="form-input" placeholder="Full name" required id="contact-name" />
-        <input type="email" name="email" autocomplete="email" class="form-input" placeholder="Work email" required id="contact-email" />
-        <input type="text" name="company" autocomplete="organization" class="form-input" placeholder="Company" required id="contact-company" />
-        <input type="text" name="jobTitle" autocomplete="organization-title" class="form-input" placeholder="Job title" id="contact-title" />
-        <textarea name="message" class="form-input form-textarea" placeholder="Tell us about your AI cost management needs" rows="4" id="contact-message"></textarea>
+        <input type="text" name="Name" autocomplete="name" class="form-input" placeholder="Full name" required id="contact-name" />
+        <input type="email" name="Email" autocomplete="email" class="form-input" placeholder="Work email" required id="contact-email" />
+        <input type="text" name="Company" autocomplete="organization" class="form-input" placeholder="Company" required id="contact-company" />
+        <input type="text" name="Job Title" autocomplete="organization-title" class="form-input" placeholder="Job title" id="contact-title" />
+        <textarea name="AI Cost Management Needs" class="form-input form-textarea" placeholder="Tell us about your AI cost management needs" rows="4" id="contact-message"></textarea>
       </div>
       <div class="form-actions">
         <button type="submit" class="btn-primary" id="contact-submit">Schedule a conversation</button>
         <a href="#top" class="back-link">Back to top ↑</a>
       </div>
-      <p class="form-note">Opens a prepared email to <a href="mailto:jmcdonough@datahubusa.com">jmcdonough@datahubusa.com</a>.</p>
-      <p class="success-msg" id="success-msg" style="display:none">Your email app has been opened. Send the prepared message to complete your request.</p>
+      <p class="success-msg" id="success-msg" style="display:none">✓ Thank you! Your message has been sent to Jim. We'll be in touch within one business day.</p>
     </form>
   </div>
 </section>
@@ -420,38 +426,17 @@
 </footer>
 
 <script>
-function handleSubmit(e) {
-  e.preventDefault();
-  const btn = document.getElementById('contact-submit');
+// Show success message after FormSubmit redirect
+if (window.location.search.includes('submitted=true')) {
   const msg = document.getElementById('success-msg');
-  const name = document.getElementById('contact-name').value.trim();
-  const email = document.getElementById('contact-email').value.trim();
-  const company = document.getElementById('contact-company').value.trim();
-  const jobTitle = document.getElementById('contact-title').value.trim();
-  const message = document.getElementById('contact-message').value.trim();
-
-  const subject = `FinOps + AI consultation request from ${name}`;
-  const body = [
-    'FinOps + AI consultation request',
-    '',
-    `Name: ${name}`,
-    `Work email: ${email}`,
-    `Company: ${company}`,
-    `Job title: ${jobTitle || 'Not provided'}`,
-    '',
-    'AI cost management needs:',
-    message || 'Not provided'
-  ].join('\n');
-
-  btn.disabled = true;
-  btn.textContent = 'Opening email…';
-  msg.style.display = 'flex';
-  window.location.href = `mailto:jmcdonough@datahubusa.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
+  if (msg) msg.style.display = 'flex';
+  // Clean URL without reload
+  window.history.replaceState({}, '', window.location.pathname + '#contact');
+  // Scroll to contact after page settles
   setTimeout(() => {
-    btn.disabled = false;
-    btn.textContent = 'Schedule a conversation';
-  }, 1500);
+    const contact = document.getElementById('contact');
+    if (contact) contact.scrollIntoView({ behavior: 'smooth' });
+  }, 400);
 }
 
 // Smooth scroll for nav links
