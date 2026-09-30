@@ -1089,6 +1089,24 @@ img { max-width: 100%; display: block; }
 
 .back-link:hover { color: var(--text-main); }
 
+.form-note {
+  margin: -4px 0 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.form-note a {
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.form-note a:hover,
+.form-note a:focus-visible {
+  color: var(--blue-hover);
+  text-decoration: underline;
+}
+
 .success-msg {
   display: flex;
   align-items: center;

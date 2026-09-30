@@ -381,17 +381,18 @@
     </div>
     <form class="contact-form" id="contact-form" onsubmit="handleSubmit(event)">
       <div class="form-fields">
-        <input type="text" class="form-input" placeholder="Full name" required id="contact-name" />
-        <input type="email" class="form-input" placeholder="Work email" required id="contact-email" />
-        <input type="text" class="form-input" placeholder="Company" required id="contact-company" />
-        <input type="text" class="form-input" placeholder="Job title" id="contact-title" />
-        <textarea class="form-input form-textarea" placeholder="Tell us about your AI cost management needs" rows="4" id="contact-message"></textarea>
+        <input type="text" name="name" autocomplete="name" class="form-input" placeholder="Full name" required id="contact-name" />
+        <input type="email" name="email" autocomplete="email" class="form-input" placeholder="Work email" required id="contact-email" />
+        <input type="text" name="company" autocomplete="organization" class="form-input" placeholder="Company" required id="contact-company" />
+        <input type="text" name="jobTitle" autocomplete="organization-title" class="form-input" placeholder="Job title" id="contact-title" />
+        <textarea name="message" class="form-input form-textarea" placeholder="Tell us about your AI cost management needs" rows="4" id="contact-message"></textarea>
       </div>
       <div class="form-actions">
         <button type="submit" class="btn-primary" id="contact-submit">Schedule a conversation</button>
         <a href="#top" class="back-link">Back to top ↑</a>
       </div>
-      <p class="success-msg" id="success-msg" style="display:none">✓ Thank you! We'll be in touch within one business day.</p>
+      <p class="form-note">Opens a prepared email to <a href="mailto:jmcdonough@datahubusa.com">jmcdonough@datahubusa.com</a>.</p>
+      <p class="success-msg" id="success-msg" style="display:none">Your email app has been opened. Send the prepared message to complete your request.</p>
     </form>
   </div>
 </section>
@@ -421,17 +422,36 @@
 <script>
 function handleSubmit(e) {
   e.preventDefault();
-  const form = document.getElementById('contact-form');
   const btn = document.getElementById('contact-submit');
   const msg = document.getElementById('success-msg');
+  const name = document.getElementById('contact-name').value.trim();
+  const email = document.getElementById('contact-email').value.trim();
+  const company = document.getElementById('contact-company').value.trim();
+  const jobTitle = document.getElementById('contact-title').value.trim();
+  const message = document.getElementById('contact-message').value.trim();
+
+  const subject = `FinOps + AI consultation request from ${name}`;
+  const body = [
+    'FinOps + AI consultation request',
+    '',
+    `Name: ${name}`,
+    `Work email: ${email}`,
+    `Company: ${company}`,
+    `Job title: ${jobTitle || 'Not provided'}`,
+    '',
+    'AI cost management needs:',
+    message || 'Not provided'
+  ].join('\n');
+
   btn.disabled = true;
-  btn.textContent = 'Sending…';
+  btn.textContent = 'Opening email…';
+  msg.style.display = 'flex';
+  window.location.href = `mailto:jmcdonough@datahubusa.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
   setTimeout(() => {
-    form.reset();
     btn.disabled = false;
     btn.textContent = 'Schedule a conversation';
-    msg.style.display = 'flex';
-  }, 1200);
+  }, 1500);
 }
 
 // Smooth scroll for nav links
