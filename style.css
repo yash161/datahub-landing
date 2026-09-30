@@ -1118,6 +1118,16 @@ img { max-width: 100%; display: block; }
   font-size: 1.04rem;
 }
 
+.error-msg {
+  margin: 0;
+  padding: 18px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid #ff6b6b;
+  background: rgba(255, 107, 107, 0.08);
+  color: #ff6b6b;
+  font-size: 0.95rem;
+}
+
 @media (max-width: 900px) {
   .contact-section {
     grid-template-columns: 1fr;
