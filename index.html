@@ -398,6 +398,14 @@
 
 </main>
 
+<div class="image-lightbox" id="image-lightbox" role="dialog" aria-modal="true" aria-label="Expanded product screenshot" hidden>
+  <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close expanded image">×</button>
+  <div class="lightbox-content">
+    <img id="lightbox-image" src="" alt="" />
+    <p id="lightbox-caption"></p>
+  </div>
+</div>
+
 <!-- ─── FOOTER ─── -->
 <footer class="footer">
   <div class="footer-inner">
@@ -449,6 +457,49 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.card, .big-card, .solution-block, .split-section, .contact-section, .comparison-table-wrap').forEach(el => {
   el.classList.add('animate-in');
   observer.observe(el);
+});
+
+// Full-resolution viewer for product screenshots from the source presentation
+const lightbox = document.getElementById('image-lightbox');
+const lightboxImage = document.getElementById('lightbox-image');
+const lightboxCaption = document.getElementById('lightbox-caption');
+const lightboxClose = document.getElementById('lightbox-close');
+const zoomableImages = document.querySelectorAll('.product-shot img, .roadmap-shot');
+
+function openLightbox(image) {
+  lightboxImage.src = image.currentSrc || image.src;
+  lightboxImage.alt = image.alt;
+  lightboxCaption.textContent = image.alt;
+  lightbox.hidden = false;
+  document.body.classList.add('lightbox-open');
+  lightboxClose.focus();
+}
+
+function closeLightbox() {
+  lightbox.hidden = true;
+  lightboxImage.src = '';
+  document.body.classList.remove('lightbox-open');
+}
+
+zoomableImages.forEach(image => {
+  image.tabIndex = 0;
+  image.setAttribute('role', 'button');
+  image.setAttribute('aria-label', `${image.alt}. Open full-size image.`);
+  image.addEventListener('click', () => openLightbox(image));
+  image.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openLightbox(image);
+    }
+  });
+});
+
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', event => {
+  if (event.target === lightbox) closeLightbox();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !lightbox.hidden) closeLightbox();
 });
 </script>
 
