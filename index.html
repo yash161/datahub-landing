@@ -9,6 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function(){ emailjs.init({ publicKey: 'OAcpVyAq2nFWy3tFy_2Fm' }); })();
+  </script>
 </head>
 <body>
 
@@ -426,11 +430,11 @@ async function handleSubmit(e) {
   const successMsg = document.getElementById('success-msg');
   const errorMsg = document.getElementById('error-msg');
 
-  const payload = {
-    name: document.getElementById('contact-name').value.trim(),
-    email: document.getElementById('contact-email').value.trim(),
+  const params = {
+    from_name: document.getElementById('contact-name').value.trim(),
+    from_email: document.getElementById('contact-email').value.trim(),
     company: document.getElementById('contact-company').value.trim(),
-    jobTitle: document.getElementById('contact-title').value.trim(),
+    job_title: document.getElementById('contact-title').value.trim(),
     message: document.getElementById('contact-message').value.trim(),
   };
 
@@ -440,22 +444,12 @@ async function handleSubmit(e) {
   errorMsg.style.display = 'none';
 
   try {
-    const res = await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json();
-
-    if (data.success) {
-      document.getElementById('contact-form').reset();
-      successMsg.style.display = 'flex';
-    } else {
-      throw new Error(data.message || 'Failed to send');
-    }
+    await emailjs.send('service_4wr2nrj', 'template_m5i9itq', params);
+    document.getElementById('contact-form').reset();
+    successMsg.style.display = 'flex';
   } catch (err) {
-    console.error('Submission error:', err);
-    errorMsg.textContent = err.message || 'Something went wrong. Please email jmcdonough@datahubusa.com directly.';
+    console.error('EmailJS error:', err);
+    errorMsg.textContent = 'Something went wrong. Please email jmcdonough@datahubusa.com directly.';
     errorMsg.style.display = 'block';
   } finally {
     btn.disabled = false;
