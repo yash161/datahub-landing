@@ -15,9 +15,8 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ success: false, message: 'Name, email, and company are required.' });
   }
 
-  // Validate SMTP config from Vercel env vars
   if (!process.env.SMTP_HOST || !process.env.SMTP_USER) {
-    console.error('SMTP not configured');
+    console.error('SMTP not configured — missing SMTP_HOST or SMTP_USER');
     return res.status(500).json({ success: false, message: 'Mail service not configured.' });
   }
 
@@ -74,7 +73,7 @@ module.exports = async function handler(req, res) {
     });
 
     await transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: `"DataHub FinOps + AI" <${process.env.SMTP_USER}@gmail.com>`,
       to: process.env.CONTACT_EMAIL || 'jmcdonough@datahubusa.com',
       replyTo: email,
       subject: `FinOps + AI consultation: ${name} at ${company}`,
@@ -84,8 +83,8 @@ module.exports = async function handler(req, res) {
 
     return res.status(200).json({ success: true, message: 'Email sent successfully.' });
   } catch (err) {
-    console.error('SMTP send error:', err);
-    return res.status(500).json({ success: false, message: 'Unable to send email. Please email jmcdonough@datahubusa.com directly.' });
+    console.error('SMTP send error:', err.message);
+    return res.status(500).json({ success: false, message: 'Unable to send email. Please try again or email jmcdonough@datahubusa.com directly.' });
   }
 };
 
